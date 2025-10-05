@@ -1,4 +1,3 @@
-
 # Quick Setup Locally
 
 ## Option 1: Using Docker
@@ -10,6 +9,7 @@ docker compose watch
 ## Option 2: Manual Setup
 
 ### 1. Install Dependencies
+
 ```bash
 cd dev-Areana
 pnpm install
@@ -18,6 +18,7 @@ pnpm install
 ### 2. Setup Database
 
 #### For Mac and Linux users
+
 ```bash
 cd packages/db
 chmod +x ./setupDB.sh
@@ -25,6 +26,7 @@ chmod +x ./setupDB.sh
 ```
 
 #### For Windows users
+
 ```bash
 cd packages/db
 copy .env.example .env
@@ -38,6 +40,7 @@ pnpm prisma db seed
 ```
 
 ### 3. Run Locally
+
 ```bash
 cd ../..
 pnpm run dev
