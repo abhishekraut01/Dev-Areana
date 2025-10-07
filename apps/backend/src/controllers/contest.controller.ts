@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { Request, Response } from "express";
 
 // Get all active challenges
 export const getActiveChallenges = async (req: Request, res: Response) => {
@@ -8,16 +8,16 @@ export const getActiveChallenges = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Active challenges fetched successfully",
-      data: []
-    })
+      data: [],
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error fetching active challenges",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Get all finished challenges
 export const getFinishedChallenges = async (req: Request, res: Response) => {
@@ -27,21 +27,21 @@ export const getFinishedChallenges = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Finished challenges fetched successfully",
-      data: []
-    })
+      data: [],
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error fetching finished challenges",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Get all sub-challenges and their start timings for a contest
 export const getContestChallenges = async (req: Request, res: Response) => {
   try {
-    const { contestId } = req.params
+    const { contestId } = req.params;
 
     // TODO: Implement logic to fetch contest challenges from database
 
@@ -50,23 +50,23 @@ export const getContestChallenges = async (req: Request, res: Response) => {
       message: "Contest challenges fetched successfully",
       data: {
         contestId,
-        challenges: []
-      }
-    })
+        challenges: [],
+      },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error fetching contest challenges",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Submit the contest with number of problems solved
 export const submitContest = async (req: Request, res: Response) => {
   try {
-    const { contestId } = req.params
-    const { problemsSolved } = req.body
+    const { contestId } = req.params;
+    const { problemsSolved } = req.body;
 
     // TODO: Implement logic to submit contest
     // TODO: Update user score in database
@@ -77,22 +77,22 @@ export const submitContest = async (req: Request, res: Response) => {
       message: "Contest submitted successfully",
       data: {
         contestId,
-        problemsSolved
-      }
-    })
+        problemsSolved,
+      },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error submitting contest",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Get a specific challenge
 export const getSpecificChallenge = async (req: Request, res: Response) => {
   try {
-    const { contestId, challengeId } = req.params
+    const { contestId, challengeId } = req.params;
 
     // TODO: Implement logic to fetch specific challenge from database
 
@@ -102,23 +102,23 @@ export const getSpecificChallenge = async (req: Request, res: Response) => {
       data: {
         contestId,
         challengeId,
-        challenge: {}
-      }
-    })
+        challenge: {},
+      },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error fetching challenge",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Submit a specific challenge
 export const submitChallenge = async (req: Request, res: Response) => {
   try {
-    const { challengeId } = req.params
-    const { solution } = req.body
+    const { challengeId } = req.params;
+    const { solution } = req.body;
 
     // TODO: Implement logic to submit challenge solution
     // TODO: Validate solution
@@ -129,22 +129,22 @@ export const submitChallenge = async (req: Request, res: Response) => {
       message: "Challenge submitted successfully",
       data: {
         challengeId,
-        correct: false // TODO: Replace with actual validation result
-      }
-    })
+        correct: false, // TODO: Replace with actual validation result
+      },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error submitting challenge",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
 
 // Get contest leaderboard
 export const getContestLeaderboard = async (req: Request, res: Response) => {
   try {
-    const { contestId } = req.params
+    const { contestId } = req.params;
 
     // TODO: Check if contest has ended
     // TODO: If ended, fetch from database
@@ -155,14 +155,14 @@ export const getContestLeaderboard = async (req: Request, res: Response) => {
       message: "Leaderboard fetched successfully",
       data: {
         contestId,
-        leaderboard: []
-      }
-    })
+        leaderboard: [],
+      },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Error fetching leaderboard",
-      error: error instanceof Error ? error.message : "Unknown error"
-    })
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
-}
+};
