@@ -227,3 +227,19 @@ export const getPendingSubmissions = asyncHandler(async (req: Request, res: Resp
   });
 });
 
+// Review submission
+export const reviewSubmission = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { submissionId } = req.params;
+  const { status, feedback } = req.body;
+  
+  // TODO: Implement logic to review submission
+  // Update submission status (approved/rejected)
+  // Add admin feedback if provided
+  // Notify user of review result
+  
+  res.status(200).json({
+    success: true,
+    message: "Submission reviewed successfully",
+    data: {}
+  });
+});
