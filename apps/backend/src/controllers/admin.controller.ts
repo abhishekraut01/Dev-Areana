@@ -91,3 +91,20 @@ export const unbanUser = asyncHandler(async (req: Request, res: Response, next: 
   });
 });
 
+// ==================== CONTEST MANAGEMENT ====================
+
+// Create contest
+export const createContest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const contestData = req.body;
+  
+  // TODO: Implement logic to create contest in database
+  // Validate contest data (title, description, start/end dates, etc.)
+  // Associate challenges with contest if provided
+  
+  res.status(201).json({
+    success: true,
+    message: "Contest created successfully",
+    data: {}
+  });
+});
+
