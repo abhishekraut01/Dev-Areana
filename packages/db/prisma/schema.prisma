@@ -38,7 +38,17 @@ model contest {
   updatedAt               DateTime
 }
 
+model ContestToChallengeMapping{
+  id                      String             @id @default(uuid())
+  contestId               String
+  challengeId             String
+  index                   Int
+  @@unique([contestId , challengeId]) //if one challenge is appread in the contest abc the same challenge should not appear twice
+}
+
 model submission {
-  id                       String            @id @default(uuid())
-  createdAt                DateTime
+  id                      String             @id @default(uuid())
+  contestId               String
+  challengeId             String
+  createdAt               DateTime
 }
