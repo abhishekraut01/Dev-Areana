@@ -142,3 +142,18 @@ export const deleteContest = asyncHandler(async (req: Request, res: Response, ne
 
 // ==================== CHALLENGE MANAGEMENT ====================
 
+// Create challenge
+export const createChallenge = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const challengeData = req.body;
+  
+  // TODO: Implement logic to create challenge in database
+  // Validate challenge data (title, description, difficulty, test cases, etc.)
+  // Handle file uploads for problem statement if needed
+  
+  res.status(201).json({
+    success: true,
+    message: "Challenge created successfully",
+    data: {}
+  });
+});
+
