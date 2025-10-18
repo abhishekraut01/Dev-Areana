@@ -7,3 +7,34 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User{
+  id              String      @id     @default(uuid())    
+  email           String      @unique
+  role            Role
+}
+
+enum Role {
+  User
+  Admin
+}
+
+model challenge{
+  id              String      @id             @default(uuid())    
+  title           String
+  notionDocId     String      @unique         
+  createdAt       DateTime
+}
+
+
+model contest{
+  id              String      @id     @default(uuid())    
+  title           String 
+  startTime       DateTime
+}
+
+model submission{
+  id              String      @id     @default(uuid())    
+
+}
