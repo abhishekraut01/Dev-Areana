@@ -8,11 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model User{
-  id              String      @id     @default(uuid())    
-  email           String      @unique
-  role            Role
+model User {
+  id                      String            @id @default(uuid())
+  email                   String            @unique
+  role                    Role
+  createdAt               DateTime
+  updatedAt               DateTime
 }
 
 enum Role {
@@ -20,21 +21,24 @@ enum Role {
   Admin
 }
 
-model challenge{
-  id              String      @id             @default(uuid())    
-  title           String
-  notionDocId     String      @unique         
-  createdAt       DateTime
+model challenge {
+  id                      String             @id @default(uuid())
+  title                   String
+  notionDocId             String             @unique
+  maxPoints               Int
+  createdAt               DateTime
+  updatedAt               DateTime
 }
 
-
-model contest{
-  id              String      @id     @default(uuid())    
-  title           String 
-  startTime       DateTime
+model contest {
+  id                      String             @id @default(uuid())
+  title                   String
+  startTime               DateTime
+  createdAt               DateTime
+  updatedAt               DateTime
 }
 
-model submission{
-  id              String      @id     @default(uuid())    
-
+model submission {
+  id                       String            @id @default(uuid())
+  createdAt                DateTime
 }
