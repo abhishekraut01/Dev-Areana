@@ -77,3 +77,17 @@ export const banUser = asyncHandler(async (req: Request, res: Response, next: Ne
   });
 });
 
+// Unban user
+export const unbanUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.params;
+  
+  // TODO: Implement logic to unban user
+  // Update user status in database
+  
+  res.status(200).json({
+    success: true,
+    message: "User unbanned successfully",
+    data: {}
+  });
+});
+
