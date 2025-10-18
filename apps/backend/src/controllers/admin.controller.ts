@@ -189,3 +189,24 @@ export const deleteChallenge = asyncHandler(async (req: Request, res: Response, 
   });
 });
 
+// ==================== SYSTEM STATISTICS ====================
+
+// Get system statistics
+export const getSystemStats = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: Implement logic to fetch system statistics
+  // Examples: total users, active users, total submissions, total challenges, etc.
+  // Consider caching for performance
+  
+  res.status(200).json({
+    success: true,
+    message: "System statistics fetched successfully",
+    data: {
+      totalUsers: 0,
+      activeUsers: 0,
+      totalChallenges: 0,
+      totalContests: 0,
+      totalSubmissions: 0,
+      pendingSubmissions: 0
+    }
+  });
+});
