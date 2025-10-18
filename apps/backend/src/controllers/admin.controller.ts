@@ -174,3 +174,18 @@ export const updateChallenge = asyncHandler(async (req: Request, res: Response, 
   });
 });
 
+// Delete challenge
+export const deleteChallenge = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { challengeId } = req.params;
+  
+  // TODO: Implement logic to delete challenge from database
+  // Handle associated submissions and test cases
+  // Consider soft delete vs hard delete
+  
+  res.status(200).json({
+    success: true,
+    message: "Challenge deleted successfully",
+    data: null
+  });
+});
+
