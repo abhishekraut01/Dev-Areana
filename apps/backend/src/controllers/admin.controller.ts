@@ -108,3 +108,20 @@ export const createContest = asyncHandler(async (req: Request, res: Response, ne
   });
 });
 
+// Update contest
+export const updateContest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { contestId } = req.params;
+  const updateData = req.body;
+  
+  // TODO: Implement logic to update contest in database
+  // Validate update data
+  // Handle case when contest is not found
+  // Consider restrictions on updating active contests
+  
+  res.status(200).json({
+    success: true,
+    message: "Contest updated successfully",
+    data: {}
+  });
+});
+
