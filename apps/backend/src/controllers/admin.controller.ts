@@ -210,3 +210,20 @@ export const getSystemStats = asyncHandler(async (req: Request, res: Response, n
     }
   });
 });
+
+
+// ==================== SUBMISSION REVIEW ====================
+
+// Get pending submissions
+export const getPendingSubmissions = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: Implement logic to fetch pending submissions from database
+  // Consider pagination
+  // Filter by status (pending review)
+  
+  res.status(200).json({
+    success: true,
+    message: "Pending submissions fetched successfully",
+    data: []
+  });
+});
+
