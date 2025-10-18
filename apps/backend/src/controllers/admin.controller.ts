@@ -157,3 +157,20 @@ export const createChallenge = asyncHandler(async (req: Request, res: Response, 
   });
 });
 
+// Update challenge
+export const updateChallenge = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { challengeId } = req.params;
+  const updateData = req.body;
+  
+  // TODO: Implement logic to update challenge in database
+  // Validate update data
+  // Handle case when challenge is not found
+  // Consider impact on existing submissions
+  
+  res.status(200).json({
+    success: true,
+    message: "Challenge updated successfully",
+    data: {}
+  });
+});
+
