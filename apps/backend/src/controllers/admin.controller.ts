@@ -46,3 +46,18 @@ export const updateUser = asyncHandler(async (req: Request, res: Response, next:
   });
 });
 
+// Delete user
+export const deleteUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.params;
+  
+  // TODO: Implement logic to delete user from database
+  // Consider soft delete vs hard delete
+  // Handle case when user is not found
+  
+  res.status(200).json({
+    success: true,
+    message: "User deleted successfully",
+    data: null
+  });
+});
+
