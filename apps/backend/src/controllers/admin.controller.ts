@@ -30,3 +30,19 @@ export const getUserById = asyncHandler(async (req: Request, res: Response, next
   });
 });
 
+// Update user
+export const updateUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.params;
+  const updateData = req.body;
+  
+  // TODO: Implement logic to update user in database
+  // Validate update data
+  // Handle case when user is not found
+  
+  res.status(200).json({
+    success: true,
+    message: "User updated successfully",
+    data: {}
+  });
+});
+
