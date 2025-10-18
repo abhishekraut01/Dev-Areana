@@ -56,3 +56,13 @@ model Submission {
   challengeId                          String
   createdAt                            DateTime
 }
+
+
+model Leaderboard{
+  id                                  String             @id  @default(uuid())
+  contestid                           String             
+  rank                                Int
+  created_at                          DateTime
+
+  @@unique([contestid ,rank])
+}
