@@ -61,3 +61,19 @@ export const deleteUser = asyncHandler(async (req: Request, res: Response, next:
   });
 });
 
+// Ban user
+export const banUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.params;
+  const { reason } = req.body;
+  
+  // TODO: Implement logic to ban user
+  // Update user status in database
+  // Optionally store ban reason and timestamp
+  
+  res.status(200).json({
+    success: true,
+    message: "User banned successfully",
+    data: {}
+  });
+});
+
