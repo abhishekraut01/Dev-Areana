@@ -21,34 +21,38 @@ enum Role {
   Admin
 }
 
-model challenge {
-  id                      String             @id @default(uuid())
-  title                   String
-  notionDocId             String             @unique
-  maxPoints               Int
-  createdAt               DateTime
-  updatedAt               DateTime
+model Challenge {
+  id                                  String                        @id @default(uuid())
+  title                               String
+  notionDocId                         String                        @unique
+  maxPoints                           Int
+  contestToChallengeMapping           ContestToChallengeMapping[]
+  createdAt                           DateTime
+  updatedAt                           DateTime
 }
 
-model contest {
-  id                      String             @id @default(uuid())
-  title                   String
-  startTime               DateTime
-  createdAt               DateTime
-  updatedAt               DateTime
+model Contest {
+  id                                  String             @id @default(uuid())
+  title                               String
+  startTime                           DateTime
+  contestToChallengeMapping           ContestToChallengeMapping[]
+  createdAt                           DateTime
+  updatedAt                           DateTime
 }
 
 model ContestToChallengeMapping{
-  id                      String             @id @default(uuid())
-  contestId               String
-  challengeId             String
-  index                   Int
+  id                                   String             @id @default(uuid())
+  contestId                            String
+  challengeId                          String
+  index                                Int
+  challenge                            Challenge          @relation(fields: [challengeId] , references: [id])
+  contest                              Contest            @relation(fields: [contestId] , references: [id])
   @@unique([contestId , challengeId]) //if one challenge is appread in the contest abc the same challenge should not appear twice
 }
 
-model submission {
-  id                      String             @id @default(uuid())
-  contestId               String
-  challengeId             String
-  createdAt               DateTime
+model Submission {
+  id                                   String             @id @default(uuid())
+  contestId                            String
+  challengeId                          String
+  createdAt                            DateTime
 }
