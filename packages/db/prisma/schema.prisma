@@ -13,6 +13,7 @@ model Users {
   username                            String        @unique
   email                               String        @unique
   role                                Role
+  leaderboard                         Leaderboard[]
   createdAt                           DateTime              @default(now())
   updatedAt                           DateTime              @default(now())
 }
@@ -35,6 +36,7 @@ model Contests {
   id                                  String        @id     @default(uuid())
   title                               String        
   startTime                           String        
+  leaderboard                         Leaderboard[]
   contestToChallengeMapping           ContestToChallengeMapping[]
   createdAt                           DateTime              @default(now())
   updatedAt                           DateTime              @default(now())
@@ -59,4 +61,16 @@ model Submissions {
 
   createdAt                           DateTime              @default(now())             
   updatedAt                           DateTime              @default(now())
+}
+
+model Leaderboard {
+  id                                  String        @id    @default(uuid())
+  contestId                           String
+  userId                              String
+  rank                                String
+  contest                             Contests             @relation(fields: [contestId] , references: [id])
+  user                                Users                @relation(fields: [userId] , references: [id])
+  @@unique([contestId , rank])
+  createdAt                           DateTime             @default(now())             
+  updatedAt                           DateTime             @default(now())
 }
