@@ -8,61 +8,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                      String            @id @default(uuid())
-  email                   String            @unique
-  role                    Role
-  createdAt               DateTime
-  updatedAt               DateTime
+model Users {
+  id                                  String        @id     @default(uuid())
+  username                            String        @unique
+  email                               String        @unique
+  role                                Role
+  createdAt                           DateTime              @default(now())
+  updatedAt                           DateTime              @default(now())
 }
 
 enum Role {
-  User
-  Admin
+  user
+  admin
 }
 
-model Challenge {
-  id                                  String                        @id @default(uuid())
-  title                               String
-  notionDocId                         String                        @unique
-  maxPoints                           Int
+model Challenges {
+  id                                  String        @id     @default(uuid())
+  title                               String        
+  notionDocId                         String        @unique
   contestToChallengeMapping           ContestToChallengeMapping[]
-  createdAt                           DateTime
-  updatedAt                           DateTime
+  createdAt                           DateTime              @default(now())
+  updatedAt                           DateTime              @default(now())
 }
 
-model Contest {
-  id                                  String             @id @default(uuid())
-  title                               String
-  startTime                           DateTime
+model Contests {
+  id                                  String        @id     @default(uuid())
+  title                               String        
+  startTime                           String        
   contestToChallengeMapping           ContestToChallengeMapping[]
-  createdAt                           DateTime
-  updatedAt                           DateTime
+  createdAt                           DateTime              @default(now())
+  updatedAt                           DateTime              @default(now())
 }
 
-model ContestToChallengeMapping{
-  id                                   String             @id @default(uuid())
-  contestId                            String
-  challengeId                          String
-  index                                Int
-  challenge                            Challenge          @relation(fields: [challengeId] , references: [id])
-  contest                              Contest            @relation(fields: [contestId] , references: [id])
-  @@unique([contestId , challengeId]) //if one challenge is appread in the contest abc the same challenge should not appear twice
-}
+model ContestToChallengeMapping {
+  id                                  String        @id     @default(uuid())
+  contestId                           String
+  challengeId                         String
+  index                               Int
+  submission                          Submissions[]
+  contests                            Contests        @relation(fields: [contestId] , references: [id])
+  challenges                          Challenges      @relation(fields: [challengeId] , references: [id])
+  @@unique([contestId , challengeId])
+} 
 
-model Submission {
-  id                                   String             @id @default(uuid())
-  contestId                            String
-  challengeId                          String
-  createdAt                            DateTime
-}
+model Submissions {
+  id                                  String        @id     @default(uuid())
+  contestToChallengeMappingId         String
+  points                              Int
+  contestToChallengeMapping           ContestToChallengeMapping      @relation(fields: [contestToChallengeMappingId] , references: [id])
 
-
-model Leaderboard{
-  id                                  String             @id  @default(uuid())
-  contestid                           String             
-  rank                                Int
-  created_at                          DateTime
-
-  @@unique([contestid ,rank])
+  createdAt                           DateTime              @default(now())             
+  updatedAt                           DateTime              @default(now())
 }
