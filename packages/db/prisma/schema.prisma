@@ -9,14 +9,17 @@ datasource db {
 }
 
 model Users {
-  id                                    String                     @id @default(uuid())
-  username                              String                     @unique
-  email                                 String                     @unique
-  role                                  Role
-  leaderboard                           Leaderboard[]              
-  submission                            Submissions[]              
-  createdAt                             DateTime                   @default(now())
-  updatedAt                             DateTime                   @default(now())
+  id           String        @id @default(uuid())
+  username     String        @unique
+  email        String        @unique
+  role         Role          @default(user)
+  submissions  Submissions[]
+  leaderboard  Leaderboard[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([email])
+  @@index([username])
 }
 
 enum Role {
@@ -25,57 +28,102 @@ enum Role {
 }
 
 model Challenges {
-  id                                    String                      @id @default(uuid())
-  title                                 String
-  notionDocId                           String                      @unique
-  contestToChallengeMapping             ContestToChallengeMapping[]
-  createdAt                             DateTime                    @default(now())
-  updatedAt                             DateTime                    @default(now())
+  id                        String                      @id @default(uuid())
+  title                     String
+  description               String?                     @db.Text
+  notionDocId               String                      @unique
+  difficulty                Difficulty?
+  contestToChallengeMapping ContestToChallengeMapping[]
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+
+  @@index([notionDocId])
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
 }
 
 model Contests {
-  id                                    String                      @id @default(uuid())
-  title                                 String
-  startTime                             String
-  leaderboard                           Leaderboard[]
-  contestToChallengeMapping             ContestToChallengeMapping[]
-  createdAt                             DateTime                    @default(now())
-  updatedAt                             DateTime                    @default(now())
+  id                        String                      @id @default(uuid())
+  title                     String
+  description               String?                     @db.Text
+  status                    ContestStatus               @default(draft)
+  startTime                 DateTime
+  endTime                   DateTime
+  leaderboard               Leaderboard[]
+  contestToChallengeMapping ContestToChallengeMapping[]
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime                    @updatedAt
+
+  @@index([startTime])
+  @@index([status])
+}
+
+enum ContestStatus {
+  draft
+  active
+  completed
 }
 
 model ContestToChallengeMapping {
-  id                                    String                      @id @default(uuid())
-  contestId                             String              
-  challengeId                           String              
-  index                                 Int             
-  submission                            Submissions[]             
-  contests                              Contests                    @relation(fields: [contestId], references: [id])
-  challenges                            Challenges                  @relation(fields: [challengeId], references: [id])
+  id          String        @id @default(uuid())
+  contestId   String
+  challengeId String
+  index       Int
+  maxPoints   Int           @default(100)
+  submissions Submissions[]
+  contest     Contests      @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  challenge   Challenges    @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@unique([contestId, challengeId])
+  @@unique([contestId, index])
+  @@index([contestId])
+  @@index([challengeId])
 }
 
 model Submissions {
-  id                                    String                      @id @default(uuid())
-  submission                            String  
-  contestToChallengeMappingId           String  
-  userId                                String  
-  user                                  Users                       @relation(fields: [userId], references: [id])
-  points                                Int 
-  contestToChallengeMapping             ContestToChallengeMapping   @relation(fields: [contestToChallengeMappingId], references: [id])
-  createdAt                             DateTime                    @default(now())
-  updatedAt                             DateTime                    @default(now())
-} 
+  id                          String                    @id @default(uuid())
+  code                        String                    @db.Text
+  contestToChallengeMappingId String
+  userId                      String
+  points                      Int
+  status                      SubmissionStatus          @default(pending)
+  user                        Users                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contestToChallengeMapping   ContestToChallengeMapping @relation(fields: [contestToChallengeMappingId], references: [id], onDelete: Cascade)
+  submittedAt                 DateTime                  @default(now())
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
 
-model Leaderboard { 
-  id                                    String                      @id @default(uuid())
-  contestId                             String                    
-  userId                                String                    
-  rank                                  String                    
-  contest                               Contests                    @relation(fields: [contestId], references: [id])
-  user                                  Users                       @relation(fields: [userId], references: [id])
-  createdAt                             DateTime                    @default(now())
-  updatedAt                             DateTime                    @default(now())
+  @@index([userId])
+  @@index([contestToChallengeMappingId])
+  @@index([submittedAt])
+}
 
+enum SubmissionStatus {
+  pending
+  accepted
+  rejected
+  reviewing
+}
+
+model Leaderboard {
+  id          String   @id @default(uuid())
+  contestId   String
+  userId      String
+  rank        Int
+  totalPoints Int      @default(0)
+  contest     Contests @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([contestId, userId])
   @@unique([contestId, rank])
+  @@index([contestId, rank])
+  @@index([userId])
 }
