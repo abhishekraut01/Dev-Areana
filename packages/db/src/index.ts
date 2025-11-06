@@ -1,17 +1,32 @@
+// src/lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
-const getPrismaSingleton =()=>{
-  return new PrismaClient()
+class PrismaSingleton {
+  private static instance: PrismaClient;
+
+  private constructor() {
+    // Private constructor ensures class cannot be instantiated directly
+  }
+
+  public static getInstance(): PrismaClient {
+    if (!PrismaSingleton.instance) {
+      PrismaSingleton.instance = new PrismaClient();
+    }
+
+    return PrismaSingleton.instance;
+  }
 }
 
-type getPrismaSingletonType = ReturnType<typeof getPrismaSingleton>
+// ✅ Handle Next.js or hot-reload environments safely
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-const globelPrimsa = globalThis as unknown as {
-  prisma : getPrismaSingletonType | unknown
+export const prisma =
+  globalForPrisma.prisma ?? PrismaSingleton.getInstance();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
 }
 
-const prisma = globelPrimsa.prisma ?? getPrismaSingleton()
-
-export default prisma
-
-if (process.env.NODE_ENV !== "production") globelPrimsa.prisma = prisma;
+export default prisma;
