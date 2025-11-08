@@ -6,9 +6,11 @@ export function otpEmailHTML(otp: string, email: string, validitySeconds = 90) {
         <h2 style="color:#111827;">Your DevArena login code</h2>
         <p>Hello,</p>
         <p>Use the code below to sign in as <b>${escapeHTML(email)}</b>:</p>
-        <p style="font-size:24px; font-weight:bold; letter-spacing:4px; background:#f3f4f6; padding:10px 20px; border-radius:6px; display:inline-block;">${otp}</p>
+        <p style="font-size:24px; font-weight:bold; letter-spacing:4px; background:#f3f4f6; padding:10px 20px; border-radius:6px; display:inline-block;">${escapeHTML(otp)}</p>
         <p style="color:#6b7280; font-size:14px;">This code is valid for ~${validitySeconds} seconds.</p>
         <p style="color:#9ca3af; font-size:12px;">If you didn’t request this, you can safely ignore this email.</p>
+        <hr style="border:none; border-top:1px solid #e5e7eb; margin:20px 0;">
+        <p style="color:#9ca3af; font-size:12px; text-align:center;">© ${new Date().getFullYear()} DevArena. All rights reserved.</p>
       </div>
     </body>
   </html>
@@ -17,6 +19,10 @@ export function otpEmailHTML(otp: string, email: string, validitySeconds = 90) {
 
 function escapeHTML(s: string) {
   return s.replace(/[&<>"']/g, (c) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
   }[c]!));
 }
