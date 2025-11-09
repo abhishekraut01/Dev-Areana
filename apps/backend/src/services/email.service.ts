@@ -56,7 +56,7 @@ export const sendOTP = async (email: string) => {
     return { ok: true };
 }
 
-export const verifyOTPAndCreateSession = async (
+export const verifyOTPService = async (
     email: string,
     otp: string,
     ip?: string,
