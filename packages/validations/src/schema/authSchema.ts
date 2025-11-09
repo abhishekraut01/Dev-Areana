@@ -6,8 +6,5 @@ export const loginSchema = z.object({
   username:z.string().min(8)
 });
 
-
-
-
 // Type exports
 export type LoginInput = z.infer<typeof loginSchema>;
