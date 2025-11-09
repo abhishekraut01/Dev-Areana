@@ -51,6 +51,12 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@repo/validations':
+        specifier: workspace:*
+        version: link:../../packages/validations
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
