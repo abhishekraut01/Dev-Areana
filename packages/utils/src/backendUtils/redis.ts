@@ -6,16 +6,15 @@ if (!process.env.REDIS_URL) {
 
 export const redis = new Redis(process.env.REDIS_URL);
 
-redis.on('connect', () => logger.info('Redis connected'));
-redis.on('ready', () => logger.info('Redis ready'));
-redis.on('error', (err) => logger.error('Redis error', err));
-redis.on('close', () => logger.warn('Redis connection closed'));
-redis.on('reconnecting', () => logger.info('Redis reconnecting...'));
+redis.on('connect', () => console.log('Redis connected'));
+redis.on('ready', () => console.log('Redis ready'));
+redis.on('error', (err) => console.log('Redis error', err));
+redis.on('close', () => console.log('Redis connection closed'));
 
 // Graceful shutdown
 const shutdownRedis = async () => {
   await redis.quit();
-  logger.info('Redis disconnected');
+  console.log('Redis disconnected');
 };
 
 process.on('SIGINT', shutdownRedis);

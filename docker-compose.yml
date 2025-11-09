@@ -6,9 +6,9 @@ services:
     container_name: postgres-prod
     restart: always
     environment:
-      POSTGRES_USER: devsync
-      POSTGRES_PASSWORD: supersecurepassword
-      POSTGRES_DB: devsyncdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: abhishek
+      POSTGRES_DB: postgresDB
     ports:
       - "5432:5432"
     volumes:

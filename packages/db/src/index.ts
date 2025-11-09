@@ -17,7 +17,6 @@ class PrismaSingleton {
   }
 }
 
-// ✅ Handle Next.js or hot-reload environments safely
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
