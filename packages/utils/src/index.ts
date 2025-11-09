@@ -1,1 +1,1 @@
-export * from "./backendUtils";
+export * from "./backendUtils/";
