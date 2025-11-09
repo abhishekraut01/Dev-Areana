@@ -10,7 +10,7 @@ interface OTPData {
     attempts: number;
 }
 
-function otpKey(email: string): string {
+function HandleOtpKey(email: string): string {
     return `otp:${email.toLowerCase()}`;
 }
 
@@ -39,7 +39,7 @@ export const sendOTP = async (email: string) => {
     }
 
     await redis.set(
-        otpKey(normalized),
+        HandleOtpKey(normalized),
         JSON.stringify(payload),
         'EX',
         OTP_TTL_SECONDS
@@ -54,4 +54,42 @@ export const sendOTP = async (email: string) => {
     await sendEmail({ to: email, subject: 'Your DevArena login code', html });
 
     return { ok: true };
+}
+
+export const verifyOTPAndCreateSession = async (
+    email: string,
+    otp: string,
+    ip?: string,
+    ua?: string
+) => {
+    const normalized = email.toLowerCase();
+    const key = HandleOtpKey(normalized);
+
+    const raw = await redis.get(key)
+    if (!raw) throw new Error('OTP expired or not found');
+
+    const data = JSON.parse(raw) as {
+        hash: string;
+        salt: string;
+        attempts: number
+    };
+
+    if (data.attempts >= MAX_ATTEMPTS) {
+        await redis.del(key);
+        throw new Error('Maximum verification attempts exceeded');
+    }
+
+    const isValid = verifyOTP(otp, data.hash, data.salt);
+
+    if (!isValid) {
+        // increment attempt count
+        data.attempts++;
+        await redis.set(key, JSON.stringify(data), 'EX', await redis.ttl(key) || 0);
+        throw new Error('Invalid OTP');
+    }
+
+    // success: delete otp key (one-time)
+    await redis.del(key);
+
+    return true
 }

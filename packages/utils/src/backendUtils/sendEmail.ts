@@ -8,7 +8,8 @@ interface SendEmailOptions {
 }
 
 export const sendEmail = async (options: SendEmailOptions) => {
-  const { to, subject, html, from = 'DevArena <team@devsync.in>' } = options;
+  const emailFrom = process.env.EMAIL_FROM as string
+  const { to, subject, html, from = emailFrom } = options;
 
   try {
     const result = await resend.emails.send({
