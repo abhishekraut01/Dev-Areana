@@ -1,4 +1,4 @@
-import { otpEmailHTML, redis, generateOTP, hashOTP, verifyOTP, sendEmail } from "@repo/utils"
+import { otpEmailHTML, redis, generateOTP, hashOTP, verifyOTP, sendEmail, OTPError } from "@repo/utils"
 
 const OTP_TTL_SECONDS = Number(process.env.OTP_TTL_SECONDS || 90);
 const MAX_ATTEMPTS = Number(process.env.OTP_MAX_ATTEMPTS || 5);
@@ -63,7 +63,7 @@ export const verifyOTPService = async (
     const key = HandleOtpKey(normalized);
 
     const raw = await redis.get(key)
-    if (!raw) throw new Error('OTP expired or not found');
+    if (!raw) throw new OTPError('EXPIRED');
 
     const data = JSON.parse(raw) as {
         hash: string;
@@ -73,7 +73,8 @@ export const verifyOTPService = async (
 
     if (data.attempts >= MAX_ATTEMPTS) {
         await redis.del(key);
-        throw new Error('Maximum verification attempts exceeded');
+        await redis.set(`otp:blocked:${normalized}`, '1', 'EX', 300); // 5 min block
+        throw new OTPError('TOO_MANY_ATTEMPTS');
     }
 
     const isValid = verifyOTP(otp, data.hash, data.salt);
@@ -83,6 +84,18 @@ export const verifyOTPService = async (
         data.attempts++;
         await redis.set(key, JSON.stringify(data), 'EX', await redis.ttl(key) || 0);
         throw new Error('Invalid OTP');
+    }
+
+    if (!isValid) {
+        data.attempts++;
+        const ttl = await redis.ttl(key);
+        if (ttl > 0) {
+            await redis.setex(key, ttl, JSON.stringify(data));
+        } else {
+            // TTL <= 0 → key already expired or has no expiry
+            await redis.del(key); // cleanup
+            throw new Error('OTP expired');
+        }
     }
 
     // success: delete otp key (one-time)

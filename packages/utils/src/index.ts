@@ -7,3 +7,4 @@ export * from "./backendUtils/ratelimiter";
 export * from "./backendUtils/redis";
 export * from "./backendUtils/resend";
 export * from "./backendUtils/otpUtilities";
+export * from "./backendUtils/otpError";
