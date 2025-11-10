@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { asyncHandler } from "./asyncHandler" // Adjust path as needed
+import { asyncHandler } from "@repo/utils" 
 
 // Get all active challenges
 export const getActiveChallenges = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

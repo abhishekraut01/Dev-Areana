@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "../utils/asyncHandler"; // Adjust path as needed
+import { asyncHandler } from "@repo/utils"; 
 
 // ==================== USER MANAGEMENT ====================
 
