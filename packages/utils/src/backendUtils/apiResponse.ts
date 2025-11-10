@@ -1,4 +1,4 @@
-class ApiResponse<T> {
+export class ApiResponse<T> {
   public success: boolean;
   public statusCode: number;
   public message: string;
@@ -11,5 +11,3 @@ class ApiResponse<T> {
     this.data = data;
   }
 }
-
-export default ApiResponse;

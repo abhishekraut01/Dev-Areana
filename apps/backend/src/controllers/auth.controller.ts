@@ -1,60 +1,67 @@
 import prisma from '@repo/db';
-import { sendOTP, verifyOTPService } from '../services/email.service'
 import { Request, Response } from 'express';
-import { createSession } from '../services/session.service';
+import { asyncHandler, ApiError, ApiResponse } from '@repo/utils';
+import { signinSchema, signupSchema } from '@repo/validations';
+import { sendOTP } from '../services/email.service';
 
-export async function signupController(req: Request, res: Response) {
-    const { email, username } = req.body;
-    try {
-        const existing = await prisma.users.findUnique({ where: { email } });
-        if (existing) throw new Error('User already exists');
+export const handleInitSignup = asyncHandler(async (req: Request, res: Response) => {
 
-        const user = await prisma.users.create({ data: { email, username } });
+    const { data, success, error } = signupSchema.safeParse(req.body)
 
-        await sendOTP(email);
-        res.json({ success: true, message: 'OTP sent to your email' });
-    } catch (err) {
-        res.status(400).json({ success: false, message: err.message });
+    if (!success) {
+        throw new ApiError(
+            400,
+            'Invalid User Input Schema',
+            error.issues
+        );
     }
-}
 
+    const { username, email } = data
 
-export async function signinController(req, res) {
-    const { email } = req.body;
-    try {
-        const user = prisma.users.findUnique({ where: { email } });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+    const isExist = await prisma.users.findUnique({
+        where: {
+            email: email,
+            username: username
+        }
+    })
 
-        await sendOTP(email);
-        res.json({ success: true, message: 'OTP sent' });
-    } catch (err) {
-        res.status(400).json({ success: false, message: err.message });
+    if (isExist) {
+        throw new ApiError(
+            409,
+            'User already exist'
+        );
     }
-}
 
+    await sendOTP(email)
 
-export async function verifyController(req, res) {
-    const { email, otp } = req.body;
-    try {
-        await verifyOTPService(email, otp);
+    res
+        .status(200)
+        .json(new ApiResponse(200, 'OTP send successfully'));
+})
 
-        const user = await prisma.users.upsert({
-            where: { email },
-            update: {},
-            create: { email },
-        });
+export const handleInitSignin = asyncHandler(async (req: Request, res: Response) => {
+    const { success, data, error } = signinSchema.safeParse(req.body)
 
-        const { accessToken, refreshToken } = await createSession(user.id, req.ip, req.get('user-agent'));
-
-        res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 30 * 24 * 60 * 60 * 1000,
-        });
-
-        res.json({ success: true, accessToken, user });
-    } catch (err) {
-        res.status(400).json({ success: false, message: err.message });
+    if (!success) {
+        throw new ApiError(
+            400,
+            "Invalid input",
+            error.issues
+        )
     }
-}
+
+    const { otp } = data
+    
+})
+
+export const handleSignin = asyncHandler(async (req: Request, res: Response) => {
+    return res.status(200).json(
+
+    )
+})
+
+export const handleSignup = asyncHandler(async (req: Request, res: Response) => {
+    return res.status(200).json(
+
+    )
+})

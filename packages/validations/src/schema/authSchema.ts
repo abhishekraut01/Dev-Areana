@@ -1,8 +1,18 @@
 import { z } from 'zod';
 
-export const SendOTPSchema = z.object({
+export const signupSchema = z.object({
     email: z.email('Invalid email format')
-        .toLowerCase()
+        .trim()
+        .max(255, 'Email too long'),
+    username: z.string()
+        .min(8)
+        .trim()
+        .max(255, 'Email too long'),
+});
+
+
+export const signinSchema = z.object({
+    email: z.email('Invalid email format')
         .trim()
         .max(255, 'Email too long'),
 });
