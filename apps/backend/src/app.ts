@@ -2,6 +2,7 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import errorHandler from "./middleware/globalErrorHandler.middleware";
 import cookieParser from 'cookie-parser'
 import { ApiError } from "@repo/utils";
+
 const app:Application = express();
 
 app.use(cookieParser());

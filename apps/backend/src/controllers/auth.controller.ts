@@ -49,7 +49,28 @@ export const handleInitSignin = asyncHandler(async (req: Request, res: Response)
             error.issues
         )
     }
-    
+
+    const { email } = data
+
+    const isExist = await prisma.users.findUnique({
+        where: {
+            email: email,
+        }
+    })
+
+    if (isExist) {
+        throw new ApiError(
+            409,
+            'User already exist'
+        );
+    }
+
+    await sendOTP(email)
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, 'OTP send successfully'));
+
 })
 
 export const handleSignin = asyncHandler(async (req: Request, res: Response) => {
