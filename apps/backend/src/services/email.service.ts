@@ -62,44 +62,43 @@ export const verifyOTPService = async (
     const normalized = email.toLowerCase();
     const key = HandleOtpKey(normalized);
 
-    const raw = await redis.get(key)
+    // 1. Retrieve OTP data from Redis
+    const raw = await redis.get(key);
     if (!raw) throw new OTPError('EXPIRED');
 
     const data = JSON.parse(raw) as {
         hash: string;
         salt: string;
-        attempts: number
+        attempts: number;
     };
 
+    // 2. Enforce max attempts rule (anti-bruteforce)
     if (data.attempts >= MAX_ATTEMPTS) {
         await redis.del(key);
-        await redis.set(`otp:blocked:${normalized}`, '1', 'EX', 300); // 5 min block
+        await redis.set(`otp:blocked:${normalized}`, '1', 'EX', 300); // block 5 min
         throw new OTPError('TOO_MANY_ATTEMPTS');
     }
 
+    // 3. Verify OTP cryptographically
     const isValid = verifyOTP(otp, data.hash, data.salt);
 
-    if (!isValid) {
-        // increment attempt count
-        data.attempts++;
-        await redis.set(key, JSON.stringify(data), 'EX', await redis.ttl(key) || 0);
-        throw new Error('Invalid OTP');
-    }
-
+    // 4. If invalid — increment attempt count safely
     if (!isValid) {
         data.attempts++;
         const ttl = await redis.ttl(key);
+
         if (ttl > 0) {
-            await redis.setex(key, ttl, JSON.stringify(data));
+            await redis.setex(key, ttl, JSON.stringify(data)); // preserve expiry
         } else {
-            // TTL <= 0 → key already expired or has no expiry
-            await redis.del(key); // cleanup
-            throw new Error('OTP expired');
+            await redis.del(key); // expired mid-verification
+            throw new OTPError('EXPIRED');
         }
+
+        throw new OTPError('INVALID');
     }
 
-    // success: delete otp key (one-time)
+    // 5. OTP verified — delete it (one-time use)
     await redis.del(key);
 
-    return true
-}
+    return true;
+};
