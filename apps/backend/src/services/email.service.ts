@@ -1,5 +1,4 @@
 import { otpEmailHTML, redis, generateOTP, hashOTP, verifyOTP, sendEmail } from "@repo/utils"
-import prisma from "@repo/db"
 
 const OTP_TTL_SECONDS = Number(process.env.OTP_TTL_SECONDS || 90);
 const MAX_ATTEMPTS = Number(process.env.OTP_MAX_ATTEMPTS || 5);
@@ -23,7 +22,7 @@ export const sendOTP = async (email: string) => {
     //rate limit with the help to redis 
     //first we will get how many times user send the otp and if he exeed the limit of sending OTP we won't allow them to send OTP
     const sendCountKey = HandleSendCountKey(normalized)
-    const sendLimit = 20 // only 20 otp requests are allowed
+    const sendLimit = 10 // only 10 otp requests are allowed
     const count = Number(redis.get(sendCountKey) ?? 0)
     if (count >= sendLimit) throw new Error('Rate limit reached for sending OTP');
 
@@ -58,9 +57,7 @@ export const sendOTP = async (email: string) => {
 
 export const verifyOTPService = async (
     email: string,
-    otp: string,
-    ip?: string,
-    ua?: string
+    otp: string
 ) => {
     const normalized = email.toLowerCase();
     const key = HandleOtpKey(normalized);

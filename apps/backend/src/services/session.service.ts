@@ -4,15 +4,13 @@ import { randomBytes } from 'crypto';
 
 export async function createSession(
     userId: string,
-    email: string,
-    role: string,
     ip?: string,
     ua?: string
 ) {
     try {
         // 1. Generate access token (JWT)
         const accessToken = jwt.sign(
-            { sub: userId, email, role },
+            { sub: userId },
             process.env.JWT_ACCESS_SECRET!,
             //todo : add ACCESS_TOKEN_EXPIRY from .env
             { expiresIn: '15m' }

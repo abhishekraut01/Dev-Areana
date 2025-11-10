@@ -6,11 +6,10 @@ import { createSession } from '../services/session.service';
 export async function signupController(req: Request, res: Response) {
     const { email, username } = req.body;
     try {
-
         const existing = await prisma.users.findUnique({ where: { email } });
         if (existing) throw new Error('User already exists');
 
-        const user = await prisma.users.create({ data: { email, username: username } });
+        const user = await prisma.users.create({ data: { email, username } });
 
         await sendOTP(email);
         res.json({ success: true, message: 'OTP sent to your email' });
