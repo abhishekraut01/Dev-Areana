@@ -1,5 +1,10 @@
-import { Router } from 'express'
-import { handleInitSignin, handleInitSignup, handleSignin, handleSignup } from '../controllers/auth.controller'
+import { Router } from 'express';
+import {
+  handleInitSignin,
+  handleInitSignup,
+  handleSignin,
+  handleSignup,
+} from '../controllers/auth.controller';
 
 const router: Router = Router();
 
@@ -9,6 +14,4 @@ router.post('/signup/verify', handleSignup);
 router.post('/signin/initiate', handleInitSignin);
 router.post('/signin/verify', handleSignin);
 
-
-
-export default router
+export default router;

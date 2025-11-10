@@ -5,9 +5,9 @@ export class ApiError extends Error {
   public isOperational: boolean;
   constructor(
     statusCode: number = 500,
-    message: string = "Internal server error",
+    message: string = 'Internal server error',
     errors: any[] = [],
-    stack: string = ""
+    stack: string = ''
   ) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);

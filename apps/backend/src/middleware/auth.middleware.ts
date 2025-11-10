@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { ApiError } from '@repo/utils';
 
 interface TokenPayload {
-  sub: string;   // userId
+  sub: string; // userId
   iat?: number;
   exp?: number;
   role?: string;
@@ -23,8 +23,8 @@ export const authenticate = (
 
     const token = authHeader.split(' ')[1];
 
-    if(!token){
-        throw new ApiError(401, 'Authorization header missing ');
+    if (!token) {
+      throw new ApiError(401, 'Authorization header missing ');
     }
 
     const secret = process.env.JWT_ACCESS_SECRET;

@@ -8,7 +8,7 @@ interface SendEmailOptions {
 }
 
 export const sendEmail = async (options: SendEmailOptions) => {
-  const emailFrom = process.env.EMAIL_FROM as string
+  const emailFrom = process.env.EMAIL_FROM as string;
   const { to, subject, html, from = emailFrom } = options;
 
   try {

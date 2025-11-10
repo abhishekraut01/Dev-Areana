@@ -1,14 +1,22 @@
 export function escapeHTML(s: string): string {
-  return s.replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-  }[c]!));
+  return s.replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[c]!
+  );
 }
 
-export function otpEmailHTML(otp: string, email: string, validitySeconds = 90): string {
+export function otpEmailHTML(
+  otp: string,
+  email: string,
+  validitySeconds = 90
+): string {
   return `
 <!DOCTYPE html>
 <html>

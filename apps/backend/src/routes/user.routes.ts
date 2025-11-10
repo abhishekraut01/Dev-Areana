@@ -1,5 +1,5 @@
 // user.routes.ts
-import { Router } from "express";
+import { Router } from 'express';
 import {
   registerUser,
   loginUser,
@@ -10,36 +10,36 @@ import {
   getUserSubmissions,
   getUserStats,
   deleteAccount,
-} from "../controllers/user.controller";
-import { authenticate } from "../middlewares/auth.middleware";
+} from '../controllers/user.controller';
+import { authenticate } from '../middlewares/auth.middleware';
 
 const router: Router = Router();
 
 // Register a new user
-router.route("/register").post(registerUser);
+router.route('/register').post(registerUser);
 
 // Login user
-router.route("/login").post(loginUser);
+router.route('/login').post(loginUser);
 
 // Logout user
-router.route("/logout").post(authenticate, logoutUser);
+router.route('/logout').post(authenticate, logoutUser);
 
 // Get current user profile
-router.route("/profile").get(authenticate, getUserProfile);
+router.route('/profile').get(authenticate, getUserProfile);
 
 // Update user profile
-router.route("/profile").put(authenticate, updateUserProfile);
+router.route('/profile').put(authenticate, updateUserProfile);
 
 // Change password
-router.route("/change-password").post(authenticate, changePassword);
+router.route('/change-password').post(authenticate, changePassword);
 
 // Get user submissions history
-router.route("/submissions").get(authenticate, getUserSubmissions);
+router.route('/submissions').get(authenticate, getUserSubmissions);
 
 // Get user statistics
-router.route("/stats").get(authenticate, getUserStats);
+router.route('/stats').get(authenticate, getUserStats);
 
 // Delete user account
-router.route("/account").delete(authenticate, deleteAccount);
+router.route('/account').delete(authenticate, deleteAccount);
 
 export default router;
