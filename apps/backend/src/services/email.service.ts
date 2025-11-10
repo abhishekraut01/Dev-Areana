@@ -3,11 +3,6 @@ import { otpEmailHTML, redis, generateOTP, hashOTP, verifyOTP, sendEmail, OTPErr
 const OTP_TTL_SECONDS = Number(process.env.OTP_TTL_SECONDS || 90);
 const MAX_ATTEMPTS = Number(process.env.OTP_MAX_ATTEMPTS || 5);
 
-interface OTPData {
-    hash: string;
-    salt: string;
-    attempts: number;
-}
 
 function HandleOtpKey(email: string): string {
     return `otp:${email.toLowerCase()}`;
@@ -17,40 +12,45 @@ function HandleSendCountKey(email: string): string {
     return `otp_send_count:${email.toLowerCase()}`;
 }
 
-export const sendOTP = async (email: string) => {
-    const normalized = email.toLowerCase()
-    //rate limit with the help to redis 
-    //first we will get how many times user send the otp and if he exeed the limit of sending OTP we won't allow them to send OTP
-    const sendCountKey = HandleSendCountKey(normalized)
-    const sendLimit = 10 // only 10 otp requests are allowed
-    const count = Number(redis.get(sendCountKey) ?? 0)
-    if (count >= sendLimit) throw new Error('Rate limit reached for sending OTP');
+export async function sendOTP(email: string) {
+    const normalized = email.toLowerCase();
+    const otpKey = HandleOtpKey(normalized);
+    const sendCountKey = HandleSendCountKey(normalized);
 
-    //generate the OTP and hash the OTP
-    const OTP = generateOTP()
-    const { hash, salt } = await hashOTP(OTP)
-
-    //store the OTP with hash and other values in redis database
-    const payload: OTPData = {
-        hash,
-        salt,
-        attempts: 0
+    //  Enforce daily send limit
+    const currentCount = Number(await redis.get(sendCountKey)) || 0;
+    if (currentCount >= MAX_ATTEMPTS) {
+        throw new OTPError("RATE_LIMIT_REACHED");
     }
 
-    await redis.set(
-        HandleOtpKey(normalized),
-        JSON.stringify(payload),
-        'EX',
-        OTP_TTL_SECONDS
-    );
+    //  Generate secure random OTP (6 digits)
+    const otp = generateOTP(); // e.g., "928415"
+    const { hash, salt } = await hashOTP(otp);
 
+    //  Prepare OTP payload for Redis
+    const payload = JSON.stringify({
+        hash,
+        salt,
+        attempts: 0,
+    });
+
+    //  Store OTP (hashed) with expiry
+    await redis.set(otpKey, payload, "EX", OTP_TTL_SECONDS);
+
+    //  Increment send counter atomically and expire in 24h
     await redis.multi()
         .incr(sendCountKey)
         .expire(sendCountKey, 24 * 60 * 60)
-        .exec()
+        .exec();
 
-    const html = otpEmailHTML(OTP, email, OTP_TTL_SECONDS)
-    await sendEmail({ to: email, subject: 'Your DevArena login code', html });
+    //  Send OTP email
+    const html = otpEmailHTML(otp, email, OTP_TTL_SECONDS);
+
+    await sendEmail({
+        to: email,
+        subject: "Your DevArena Login Code",
+        html,
+    });
 
     return { ok: true };
 }
