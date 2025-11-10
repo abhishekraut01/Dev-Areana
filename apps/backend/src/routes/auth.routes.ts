@@ -3,10 +3,12 @@ import { handleInitSignin, handleInitSignup, handleSignin, handleSignup } from '
 
 const router: Router = Router();
 
-router.route('/initiate_signup').post(handleInitSignup)
-router.route('/initiate_signin').post(handleInitSignin)
-router.route('/signin').post(handleSignin)
-router.route('/signup').post(handleSignup)
+// auth.routes.ts
+router.post('/signup/initiate', handleInitSignup);
+router.post('/signup/verify', handleSignup);
+router.post('/signin/initiate', handleInitSignin);
+router.post('/signin/verify', handleSignin);
+
 
 
 export default router
