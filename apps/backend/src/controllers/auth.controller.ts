@@ -49,8 +49,6 @@ export const handleInitSignin = asyncHandler(async (req: Request, res: Response)
             error.issues
         )
     }
-
-    const { otp } = data
     
 })
 
