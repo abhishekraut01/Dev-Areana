@@ -63,6 +63,9 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -119,6 +122,9 @@ importers:
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -194,6 +200,9 @@ importers:
 
   packages/utils:
     dependencies:
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       express:
         specifier: ^5.1.0
         version: 5.1.0

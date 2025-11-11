@@ -1,4 +1,4 @@
-import { resend } from './resend';
+import { resend } from './resend.js';
 
 interface SendEmailOptions {
   to: string | string[];
