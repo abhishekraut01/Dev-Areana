@@ -7,8 +7,8 @@ import {
   VerifyOTPSigninSchema,
   VerifyOTPSignupSchema,
 } from '@repo/validations';
-import { sendOTP, verifyOTPService } from '../services/email.service';
-import { createSession } from '../services/session.service';
+import { sendOTP, verifyOTPService } from '../services/email.service.js';
+import { createSession } from '../services/session.service.js';
 
 export const handleInitSignup = asyncHandler(
   async (req: Request, res: Response) => {

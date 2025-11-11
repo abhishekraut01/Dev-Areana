@@ -7,7 +7,7 @@ import {
   getSpecificChallenge,
   submitChallenge,
   getContestLeaderboard,
-} from '../controllers/contest.controller';
+} from '../controllers/contest.controller.js';
 
 const router: Router = Router();
 

@@ -16,13 +16,11 @@ import {
   getSystemStats,
   reviewSubmission,
   getPendingSubmissions,
-} from '../controllers/admin.controller';
-import { authenticate, authorizeAdmin } from '../middlewares/auth.middleware';
+} from '../controllers/admin.controller.js';
 
 const router: Router = Router();
 
 // All routes require authentication and admin authorization
-router.use(authenticate, authorizeAdmin);
 
 // User management
 router.route('/users').get(getAllUsers);

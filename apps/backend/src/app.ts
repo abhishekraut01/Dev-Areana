@@ -1,5 +1,5 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
-import errorHandler from './middleware/globalErrorHandler.middleware';
+import errorHandler from './middleware/globalErrorHandler.middleware.js';
 import cookieParser from 'cookie-parser';
 import { ApiError } from '@repo/utils';
 
@@ -10,7 +10,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ limit: '5mb', extended: true }));
 
 // Import and use routes
-import authRoute from './routes/auth.routes';
+import authRoute from './routes/auth.routes.js';
 app.use('/api/v1/auth', authRoute);
 
 // 404 Handler
